@@ -1,83 +1,98 @@
+import math
 import random
 import time
-import math
 
-step_count = 0
+WARNING_DISTANCE_M = 50
 
-leader = {
-    "name": "Razie",
-    "latitude": 3.14000,
-    "longitude": 101.69000,
-    "heading": (random.uniform(0, 360))  
 
-}
+def create_person(person_id, name, role, latitude, longitude):
+    return {
+        "id": person_id,
+        "name": name,
+        "role": role,
+        "latitude": latitude,
+        "longitude": longitude,
+        "heading": random.uniform(0, 360),
+        "status": "SAFE",
+    }
 
-hiker = {
-    "name": "Benjamin",
-    "latitude": 3.13990,
-    "longitude": 101.68990,
-    "heading": (random.uniform(0, 360))
-}
+
+people = [
+    create_person(1, "Razie", "Leader", 3.14000, 101.69000),
+    create_person(2, "Benjaminhu", "Hiker", 3.13990, 101.68990),
+    create_person(3, "Odyssey", "Hiker", 3.14030, 101.69020),
+    create_person(4, "Edward", "Hiker", 3.13970, 101.69010),
+]
+
 
 def get_distance_meters(lat1, lon1, lat2, lon2):
-    # Earth's radius in metres
-    R = 6371000.0 
-    
+    earth_radius_m = 6_371_000
+
     phi1 = math.radians(lat1)
     phi2 = math.radians(lat2)
     delta_phi = math.radians(lat2 - lat1)
     delta_lambda = math.radians(lon2 - lon1)
-    
-    # Haversine formula
-    a = math.sin(delta_phi / 2)**2 + math.cos(phi1) * math.cos(phi2) * math.sin(delta_lambda / 2)**2
+
+    a = (
+        math.sin(delta_phi / 2) ** 2
+        + math.cos(phi1) * math.cos(phi2)
+        * math.sin(delta_lambda / 2) ** 2
+    )
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    
-    return R * c
 
-def move(entity, dt=2.0, speed_mps=1.3):
-    # gradually turn instead of jumping to a random new heading
-    entity["heading"] += random.uniform(-15, 15)  # degrees turn per step
-    heading_rad = math.radians(entity["heading"])
-    
-    dist_m = speed_mps * dt  # meters this step
-    
-    # convert meters -> lat/lon deltas
-    dlat = (dist_m * math.cos(heading_rad)) / 111320.0
-    dlon = (dist_m * math.sin(heading_rad)) / (111320.0 * math.cos(math.radians(entity["latitude"])))
-    
-    entity["latitude"] += dlat
-    entity["longitude"] += dlon
+    return earth_radius_m * c
 
 
+def move(person, dt=2.0, speed_mps=1.3):
+    person["heading"] = (person["heading"] + random.uniform(-15, 15)) % 360
+    heading_rad = math.radians(person["heading"])
 
-print("Leader")
-print(leader["name"])
-print(leader["latitude"])
-print(leader["longitude"])
+    distance_m = speed_mps * dt
 
-print()
-print("Hiker")
-print(hiker["name"])
-print(hiker["latitude"])
-print(hiker["longitude"])
-print()
-print("Simulating walking.. press Ctrl+C to stop")
+    person["latitude"] += (distance_m * math.cos(heading_rad)) / 111_320
+    person["longitude"] += (
+        distance_m * math.sin(heading_rad)
+        / (111_320 * math.cos(math.radians(person["latitude"])))
+    )
+
+
+step_count = 0
+
 try:
+    print("Simulating hiking trip — press Ctrl+C to stop.")
+
     while True:
         step_count += 1
-        
-        move(leader)
-        move(hiker)
 
-        distance = get_distance_meters(leader["latitude"], leader["longitude"], hiker["latitude"], hiker["longitude"])
-        
-        print(f"Step {step_count} | Latitude: {hiker['latitude']:.6f} | Longitude: {hiker['longitude']:.6f} | Distance from leader: {distance:.2f} meters")
+        for person in people:
+            move(person)
 
-        if distance > 50:
-            print(f"  WARNING: {hiker['name']} is {distance:.1f}m from {leader['name']}!")
+        leader = next(person for person in people if person["role"] == "Leader")
 
-        time.sleep(2)  
+        print(f"\n========== Step {step_count} ==========")
 
+        for person in people:
+            print(f"{person['role']}: {person['name']}")
+            print(f"Location: ({person['latitude']:.6f}, {person['longitude']:.6f})")
+
+            if person["role"] == "Hiker":
+                distance = get_distance_meters(
+                    leader["latitude"],
+                    leader["longitude"],
+                    person["latitude"],
+                    person["longitude"],
+                )
+
+                person["status"] = (
+                    "WARNING" if distance > WARNING_DISTANCE_M else "SAFE"
+                )
+
+                print(f"Distance from leader: {distance:.2f}m")
+                print(f"Status: {person['status']}")
+
+            print("-" * 35)
+
+        time.sleep(2)
 
 except KeyboardInterrupt:
     print("\nSimulation stopped by user.")
