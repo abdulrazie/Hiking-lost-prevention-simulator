@@ -3,36 +3,36 @@
     "id": 1,
     "name": "Razie",
     "role": "Leader",
-    "latitude": 3.14,
-    "longitude": 101.69,
-    "heading": 0,
+    "latitude": 3.140295414834762,
+    "longitude": 101.69005838044309,
+    "heading": 4.379349255879333,
     "status": "SAFE"
   },
   {
     "id": 2,
     "name": "Benjaminhu",
     "role": "Hiker",
-    "latitude": 3.1399,
-    "longitude": 101.6899,
-    "heading": 0,
+    "latitude": 3.1401956982973647,
+    "longitude": 101.68991436476112,
+    "heading": 35.30335615174097,
     "status": "SAFE"
   },
   {
     "id": 3,
     "name": "Odyssey",
     "role": "Hiker",
-    "latitude": 3.1403,
-    "longitude": 101.6902,
-    "heading": 0,
+    "latitude": 3.140600389660069,
+    "longitude": 101.690192638955,
+    "heading": 342.2032023005899,
     "status": "SAFE"
   },
   {
     "id": 4,
     "name": "Edward",
     "role": "Hiker",
-    "latitude": 3.1397,
-    "longitude": 101.6901,
-    "heading": 0,
+    "latitude": 3.1399749165735327,
+    "longitude": 101.68999357073251,
+    "heading": 340.51421332025245,
     "status": "SAFE"
   }
 ]

@@ -1,6 +1,7 @@
 import math
 import random
 import time
+import json
 
 WARNING_DISTANCE_M = 50
 
@@ -17,12 +18,8 @@ def create_person(person_id, name, role, latitude, longitude):
     }
 
 
-people = [
-    create_person(1, "Razie", "Leader", 3.14000, 101.69000),
-    create_person(2, "Benjaminhu", "Hiker", 3.13990, 101.68990),
-    create_person(3, "Odyssey", "Hiker", 3.14030, 101.69020),
-    create_person(4, "Edward", "Hiker", 3.13970, 101.69010),
-]
+with open("people.json", "r") as file:
+    people = json.load(file)
 
 
 def get_distance_meters(lat1, lon1, lat2, lon2):
@@ -96,3 +93,7 @@ try:
 
 except KeyboardInterrupt:
     print("\nSimulation stopped by user.")
+    with open("people.json", "w") as file:
+        json.dump(people, file, indent=2)
+
+    print("Latest locations saved to people.json.")
