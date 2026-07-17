@@ -39,5 +39,25 @@
     "id": 5,
     "name": "Boombaya",
     "age": 29
+  },
+  {
+    "id": 6,
+    "name": "string",
+    "age": 0,
+    "role": "Hiker",
+    "heading": 0.0,
+    "status": "SAFE",
+    "latitude": 3.139951111143812,
+    "longitude": 101.69022891107541
+  },
+  {
+    "id": 7,
+    "name": "broziecrazie",
+    "age": 20,
+    "role": "Hiker",
+    "heading": 0.0,
+    "status": "SAFE",
+    "latitude": 3.1401611295496097,
+    "longitude": 101.69043062691422
   }
 ]
