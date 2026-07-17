@@ -28,7 +28,7 @@ This project is being developed as a portfolio project to learn backend developm
 ## Tech Stack
 
 - Python
-- FastAPI (planned)
+- FastAPI
 - SQLite (planned)
 - Leaflet.js (planned) (idk)
 - Docker (planned) (idk)
