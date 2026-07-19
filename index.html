@@ -40,10 +40,27 @@
         <p class="safe">Status: SAFE</p>
     </div>
 
-    <div class="person">
-        <h2>Benjamin — Hiker</h2>
-        <p>Location: (3.139900, 101.689900)</p>
-        <p class="warning">Status: WARNING</p>
-    </div>
+   <div class="person">
+    <h2>Benjamin — Hiker</h2>
+    <p>Location: (3.139900, 101.689900)</p>
+    <p id="benjamin-status" class="safe">Status: SAFE</p>
+
+    <button onclick="toggleBenjaminStatus()">
+        Toggle Benjamin's Status
+    </button>
+</div>
 </body>
+<script>
+    function toggleBenjaminStatus() {
+        const status = document.getElementById("benjamin-status");
+
+        if (status.textContent === "Status: SAFE") {
+            status.textContent = "Status: WARNING";
+            status.className = "warning";
+        } else {
+            status.textContent = "Status: SAFE";
+            status.className = "safe";
+        }
+    }
+</script>
 </html>
