@@ -36,10 +36,15 @@
     "status": "SAFE"
   },
   {
-    "id": 5,
-    "name": "Boombaya",
-    "age": 29
-  },
+  "id": 5,
+  "name": "Boombaya",
+  "age": 29,
+  "role": "Hiker",
+  "latitude": 3.1401,
+  "longitude": 101.6901,
+  "heading": 0,
+  "status": "SAFE"
+},
   {
     "id": 6,
     "name": "string",
@@ -59,5 +64,35 @@
     "status": "SAFE",
     "latitude": 3.1401611295496097,
     "longitude": 101.69043062691422
+  },
+  {
+    "id": 8,
+    "name": "Rifae",
+    "age": 5,
+    "role": "Hiker",
+    "heading": 0.0,
+    "status": "SAFE",
+    "latitude": 3.140096464046085,
+    "longitude": 101.69010356895832
+  },
+  {
+    "id": 9,
+    "name": "Rifae",
+    "age": 5,
+    "role": "Hiker",
+    "heading": 0.0,
+    "status": "SAFE",
+    "latitude": 3.140276497860374,
+    "longitude": 101.6904381091276
+  },
+  {
+    "id": 10,
+    "name": "Eyre",
+    "age": 19,
+    "role": "Hiker",
+    "heading": 0.0,
+    "status": "SAFE",
+    "latitude": 3.139998302506806,
+    "longitude": 101.68985464615626
   }
 ]
