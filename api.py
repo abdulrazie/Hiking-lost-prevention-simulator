@@ -4,8 +4,18 @@ import json
 import random
 import math
 from pathlib import Path
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Hiker Simulator API")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 data_file = Path(__file__).with_name("people.json")
 
