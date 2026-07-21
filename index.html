@@ -84,7 +84,7 @@ async function loadPeople() {
         message.textContent = `Loaded ${people.length} people.`;
 
     } catch (error) {
-        message.textContent = "Could not connect to the FastAPI server.";
+       message.textContent = `Could not load or display people: ${error.message}`;
         console.error(error);
     }
 }
