@@ -34,21 +34,15 @@
 <body>
     <h1>Hiker Tracker</h1>
 
-    <div class="person">
-        <h2>Razie — Leader</h2>
-        <p>Location: (3.140000, 101.690000)</p>
-        <p class="safe">Status: SAFE</p>
-    </div>
+    <button id="refresh-button">Refresh people</button>
 
-   <div class="person">
-    <h2>Benjamin — Hiker</h2>
-    <p>Location: (3.139900, 101.689900)</p>
-    <p id="benjamin-status" class="safe">Status: SAFE</p>
+    <p id="message">Press Refresh to load hikers.</p>
 
-    <button onclick="toggleBenjaminStatus()">
-        Toggle Benjamin's Status
-    </button>
-</div>
+    <div id="people-list"></div>
+
+    <script>
+        // JavaScript goes here in Part 3
+    </script>
 </body>
 <script>
     function toggleBenjaminStatus() {
