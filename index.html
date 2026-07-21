@@ -41,7 +41,57 @@
     <div id="people-list"></div>
 
     <script>
-        // JavaScript goes here in Part 3
+       const refreshButton = document.getElementById("refresh-button");
+const message = document.getElementById("message");
+const peopleList = document.getElementById("people-list");
+
+
+async function loadPeople() {
+    message.textContent = "Loading hikers...";
+
+    try {
+        // Ask your FastAPI endpoint for everyone
+        const response = await fetch("http://127.0.0.1:8000/people");
+
+        // If FastAPI returned an error, stop here
+        if (!response.ok) {
+            throw new Error("Could not load people");
+        }
+
+        // Convert the JSON response into a JavaScript list
+        const people = await response.json();
+
+        // Remove old cards before creating fresh ones
+        peopleList.innerHTML = "";
+
+        // Create one HTML card for every person from the API
+        for (const person of people) {
+            const card = document.createElement("div");
+            card.className = "person";
+
+            const statusClass =
+                person.status === "WARNING" ? "warning" : "safe";
+
+            card.innerHTML = `
+                <h2>${person.name} — ${person.role}</h2>
+                <p>Location: (${person.latitude.toFixed(6)}, ${person.longitude.toFixed(6)})</p>
+                <p class="${statusClass}">Status: ${person.status}</p>
+            `;
+
+            peopleList.appendChild(card);
+        }
+
+        message.textContent = `Loaded ${people.length} people.`;
+
+    } catch (error) {
+        message.textContent = "Could not connect to the FastAPI server.";
+        console.error(error);
+    }
+}
+
+
+// Run loadPeople when the button is clicked
+refreshButton.addEventListener("click", loadPeople);
     </script>
 </body>
 <script>
