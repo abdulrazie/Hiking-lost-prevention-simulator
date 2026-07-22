@@ -92,6 +92,8 @@ async function loadPeople() {
 
 // Run loadPeople when the button is clicked
 refreshButton.addEventListener("click", loadPeople);
+loadPeople();
+setInterval(loadPeople, 2000);
     </script>
 </body>
 <script>
