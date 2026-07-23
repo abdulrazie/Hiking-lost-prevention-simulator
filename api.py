@@ -105,3 +105,18 @@ def create_person(new_person: PersonCreate):
     save_people(people)
 
     return person_to_add
+
+@app.delete("/people/{person_id}", status_code=204)
+def delete_person(person_id: int):
+    people = load_people()
+
+    person_to_delete = next(
+        (person for person in people if person["id"] == person_id),
+        None
+    )
+
+    if person_to_delete is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    people.remove(person_to_delete)
+    save_people(people)
