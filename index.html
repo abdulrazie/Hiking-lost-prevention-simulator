@@ -96,17 +96,4 @@ loadPeople();
 setInterval(loadPeople, 2000);
     </script>
 </body>
-<script>
-    function toggleBenjaminStatus() {
-        const status = document.getElementById("benjamin-status");
-
-        if (status.textContent === "Status: SAFE") {
-            status.textContent = "Status: WARNING";
-            status.className = "warning";
-        } else {
-            status.textContent = "Status: SAFE";
-            status.className = "safe";
-        }
-    }
-</script>
 </html>
