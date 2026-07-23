@@ -5,6 +5,13 @@ import random
 import math
 from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
+
+class PersonUpdate(BaseModel):
+    name: Optional[str] = None
+    age: Optional[int] = None
+    role: Optional[str] = None
+    status: Optional[str] = None
 
 app = FastAPI(title="Hiker Simulator API")
 app.add_middleware(
@@ -120,3 +127,21 @@ def delete_person(person_id: int):
 
     people.remove(person_to_delete)
     save_people(people)
+
+@app.patch("/people/{person_id}")
+def update_person(person_id: int, updates: PersonUpdate):
+    people = load_people()
+
+    person_to_update = next(
+        (person for person in people if person["id"] == person_id),
+        None
+    )
+
+    if person_to_update is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    update_data = updates.model_dump(exclude_unset=True)
+    person_to_update.update(update_data)
+
+    save_people(people)
+    return person_to_update   

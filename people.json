@@ -37,23 +37,13 @@
   },
   {
     "id": 5,
-    "name": "Boombaya",
-    "age": 29,
-    "role": "Hiker",
+    "name": "mud",
+    "age": 0,
+    "role": "string",
     "latitude": 3.1401,
     "longitude": 101.6901,
     "heading": 0,
-    "status": "SAFE"
-  },
-  {
-    "id": 6,
-    "name": "string",
-    "age": 0,
-    "role": "Hiker",
-    "heading": 0.0,
-    "status": "SAFE",
-    "latitude": 3.139951111143812,
-    "longitude": 101.69022891107541
+    "status": "string"
   },
   {
     "id": 7,
