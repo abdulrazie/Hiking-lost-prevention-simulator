@@ -29,6 +29,6 @@ This project is being developed as a portfolio project to learn backend developm
 
 - Python
 - FastAPI
-- SQLite (planned)
+- SQLite 
 - Leaflet.js (planned) (idk)
 - Docker (planned) (idk)
