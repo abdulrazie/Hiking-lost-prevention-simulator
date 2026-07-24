@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project is a simulation of an offline-first hiking safety system.
+This project is a simulation of a hiking safety system.
 
 Instead of relying on real GPS hardware, Python scripts simulate hikers moving through the environment. The system continuously calculates distances between hikers using the Haversine formula and raises alerts whenever a member becomes separated from the group beyond a configurable safety threshold.
 
