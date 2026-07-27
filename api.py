@@ -6,6 +6,7 @@ import math
 from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
+from database import get_connection
 
 class PersonUpdate(BaseModel):
     name: Optional[str] = None
@@ -55,6 +56,19 @@ def random_location_near(person, max_distance_m=50):
         person["longitude"] + longitude_change
     )
 
+def get_all_people_from_db():
+    connection = get_connection()
+
+    rows = connection.execute("""
+        SELECT *
+        FROM people
+        ORDER BY id
+    """).fetchall()
+
+    connection.close()
+
+    return [dict(row) for row in rows]
+
 
 class PersonCreate(BaseModel):
     name: str
@@ -71,12 +85,13 @@ def home():
 
 @app.get("/people")
 def get_people():
-    return load_people()
+    return get_all_people_from_db()
+
 
 
 @app.get("/people/{person_id}")
 def get_person(person_id: int):
-    people = load_people()
+    people = get_all_people_from_db()
 
     for person in people:
         if person["id"] == person_id:
@@ -87,7 +102,7 @@ def get_person(person_id: int):
 
 @app.post("/people", status_code=201)
 def create_person(new_person: PersonCreate):
-    people = load_people()
+    people = get_all_people_from_db()
 
     leader = next(
         (person for person in people if person["role"] == "Leader"),
@@ -115,7 +130,7 @@ def create_person(new_person: PersonCreate):
 
 @app.delete("/people/{person_id}", status_code=204)
 def delete_person(person_id: int):
-    people = load_people()
+    people = get_all_people_from_db()
 
     person_to_delete = next(
         (person for person in people if person["id"] == person_id),
@@ -130,7 +145,7 @@ def delete_person(person_id: int):
 
 @app.patch("/people/{person_id}")
 def update_person(person_id: int, updates: PersonUpdate):
-    people = load_people()
+    people = get_all_people_from_db()
 
     person_to_update = next(
         (person for person in people if person["id"] == person_id),
