@@ -162,18 +162,39 @@ def delete_person(person_id: int):
     
 @app.patch("/people/{person_id}")
 def update_person(person_id: int, updates: PersonUpdate):
-    people = get_all_people_from_db()
+    update_data = updates.model_dump(exclude_unset=True)
 
-    person_to_update = next(
-        (person for person in people if person["id"] == person_id),
-        None
+    if not update_data:
+        raise HTTPException(status_code=400, detail="No updates sent")
+
+    columns_to_update = ", ".join(
+        f"{column} = ?"
+        for column in update_data
     )
 
-    if person_to_update is None:
+    values = list(update_data.values())
+    values.append(person_id)
+
+    connection = get_connection()
+
+    cursor = connection.execute(f"""
+        UPDATE people
+        SET {columns_to_update}
+        WHERE id = ?
+    """, values)
+
+    connection.commit()
+
+    if cursor.rowcount == 0:
+        connection.close()
         raise HTTPException(status_code=404, detail="Person not found")
 
-    update_data = updates.model_dump(exclude_unset=True)
-    person_to_update.update(update_data)
+    row = connection.execute("""
+        SELECT *
+        FROM people
+        WHERE id = ?
+    """, (person_id,)).fetchone()
 
-    save_people(people)
-    return person_to_update   
+    connection.close()
+
+    return dict(row)
