@@ -147,19 +147,19 @@ def create_person(new_person: PersonCreate):
 
 @app.delete("/people/{person_id}", status_code=204)
 def delete_person(person_id: int):
-    people = get_all_people_from_db()
+    connection = get_connection()
 
-    person_to_delete = next(
-        (person for person in people if person["id"] == person_id),
-        None
-    )
+    cursor = connection.execute("""
+        DELETE FROM people
+        WHERE id = ?
+    """, (person_id,))
 
-    if person_to_delete is None:
+    connection.commit()
+    connection.close()
+
+    if cursor.rowcount == 0:
         raise HTTPException(status_code=404, detail="Person not found")
-
-    people.remove(person_to_delete)
-    save_people(people)
-
+    
 @app.patch("/people/{person_id}")
 def update_person(person_id: int, updates: PersonUpdate):
     people = get_all_people_from_db()
