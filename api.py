@@ -1,9 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-import json
 import random
 import math
-from pathlib import Path
 from fastapi.middleware.cors import CORSMiddleware
 from typing import Optional
 from database import get_connection
@@ -25,17 +23,6 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-data_file = Path(__file__).with_name("people.json")
-
-
-def load_people():
-    with open(data_file, "r") as file:
-        return json.load(file)
-
-
-def save_people(people):
-    with open(data_file, "w") as file:
-        json.dump(people, file, indent=2)
 
 
 def random_location_near(person, max_distance_m=50):
@@ -91,42 +78,72 @@ def get_people():
 
 @app.get("/people/{person_id}")
 def get_person(person_id: int):
-    people = get_all_people_from_db()
+    connection = get_connection()
 
-    for person in people:
-        if person["id"] == person_id:
-            return person
+    row = connection.execute("""
+        SELECT *
+        FROM people
+        WHERE id = ?
+    """, (person_id,)).fetchone()
 
-    raise HTTPException(status_code=404, detail="Person not found")
+    connection.close()
+
+    if row is None:
+        raise HTTPException(status_code=404, detail="Person not found")
+
+    return dict(row)
 
 
 @app.post("/people", status_code=201)
 def create_person(new_person: PersonCreate):
-    people = get_all_people_from_db()
+    connection = get_connection()
 
-    leader = next(
-        (person for person in people if person["role"] == "Leader"),
-        None
-    )
+    leader = connection.execute("""
+        SELECT *
+        FROM people
+        WHERE role = ?
+    """, ("Leader",)).fetchone()
 
     if leader is None:
+        connection.close()
         raise HTTPException(status_code=500, detail="No leader exists")
 
-    latitude, longitude = random_location_near(leader)
+    latitude, longitude = random_location_near(dict(leader))
 
-    new_id = max((person["id"] for person in people), default=0) + 1
+    cursor = connection.execute("""
+        INSERT INTO people (
+            name,
+            age,
+            role,
+            latitude,
+            longitude,
+            heading,
+            status
+        )
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+    """, (
+        new_person.name,
+        new_person.age,
+        new_person.role,
+        latitude,
+        longitude,
+        new_person.heading,
+        new_person.status
+    ))
 
-    person_to_add = {
-        "id": new_id,
-        **new_person.model_dump(),
-        "latitude": latitude,
-        "longitude": longitude
-    }
+    connection.commit()
 
-    people.append(person_to_add)
-    save_people(people)
+    new_id = cursor.lastrowid
 
-    return person_to_add
+    row = connection.execute("""
+        SELECT *
+        FROM people
+        WHERE id = ?
+    """, (new_id,)).fetchone()
+
+    connection.close()
+
+    return dict(row)
 
 @app.delete("/people/{person_id}", status_code=204)
 def delete_person(person_id: int):
